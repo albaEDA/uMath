@@ -1,4 +1,6 @@
-# μSyMath
+
+
+<div style="text-align:center"><img src="https://github.com/AaronKel/uMath/blob/master/uMath-logo.png" data-canonical-src="https://github.com/AaronKel/uMath/blob/master/uMath-logo.png" width="200" /></div>
 
 This project aims to bring a feature rich computer algebra system (CAS) to the microcontroller world and provide a platform for an open source graphing calculator.
 
@@ -27,7 +29,7 @@ It was then ported to Python 3 by Aaron Kelly, 2017 and currently
 work is undergoing to allow it to run on some of the cheaper STM or
 ESP8266 modules.
 
-## Credits
+## Authours
 
 Brandon Niemczyk
 
