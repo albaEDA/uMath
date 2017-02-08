@@ -71,17 +71,3 @@ def diff(expression, variable):
     return _diff_known_function(vals.f(vals.a), vals.a) * diff(vals.a, variable)
 
   raise DifferentiationError("d/d%s  %s" % (variable,expression))
-  
-def inte(expression, variable):
-  
-  #recast = {(sin, cos, cot): tan}
-  
-  expression = symbolic(expression)
-  
-  if expression.match(variable) == False:
-    expression = (expression*symbolic(variable)).simplify()
-    
-  if expression.match(Sin(variable)) or expression.match(Cos(variable)):
-    return tan(variable)
-  
-
