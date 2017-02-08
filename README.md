@@ -1,6 +1,12 @@
 
 
-<div style="text-align:center"><img src="https://github.com/AaronKel/uMath/blob/master/uMath-logo.png" data-canonical-src="https://github.com/AaronKel/uMath/blob/master/uMath-logo.png" width="200" /></div>
+<p align="center">
+  <a href="https://github.com/AaronKel/uMath/wiki">Wiki</a> |
+  <a href="https://github.com/AaronKel/uMath/issues">Issues</a> |
+  <a href="#">Documentation</a>
+  <br><br>
+  <img src="https://github.com/AaronKel/uMath/blob/master/uMath-logo.png" data-canonical-src="https://github.com/AaronKel/uMath/blob/master/uMath-logo.png" width="200" />
+</p>
 
 This project aims to bring a feature rich computer algebra system (CAS) to the microcontroller world and provide a platform for an open source graphing calculator.
 
@@ -20,7 +26,7 @@ x**2
 
 ## Contributing
 
-See Wiki on contributing guidelines
+See <a href="https://github.com/AaronKel/uMath/wiki">Wiki</a> on contributing guidelines
 
 ## History
 
