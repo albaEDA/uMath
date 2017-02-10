@@ -191,13 +191,13 @@ def _get_factors(exp):
     tmp = _get_factors(vals['a'])
     for i in tmp:
       if i in rv:
-        rv[i] += tmp[i] 
+        rv[i] = tmp[i] + rv[i]
       else:
         rv[i] = tmp[i]
     tmp = _get_factors(vals['b'])
     for i in tmp:
       if i in rv:
-        rv[i] += tmp[i] 
+        rv[i] = tmp[i] + rv[i]
       else:
         rv[i] = tmp[i]
   elif exp.match(a ** b, vals):

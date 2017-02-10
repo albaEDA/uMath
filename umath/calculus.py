@@ -3,7 +3,7 @@ from .functions import *
 from .stdops import *
 from .memoize import Memoize
 
-_known_functions = (Log, Add, Sub, Mul, Div, Pow, Sin, Cos, Tan, Exp, Sum)
+_known_functions = (Log, Add, Sub, Mul, Div, Pow, Sin, Cos, Tan, Exp, Sum, Sec)
 
 class DifferentiationError(Exception):
   pass
@@ -16,33 +16,45 @@ def _diff_known_function(expression, variable):
   if expression[0] not in _known_functions:
     raise DifferentiationError("d/d%s  %s" % (variable,expression))
     
-  #constants eg (yx+yx) = 2*y
+  #constants eg (x*3+x*2) = 5.0
   if expression.match(g + h, vals):
     return diff(vals.g, variable) + diff(vals.h, variable)
   
-  #constants eg (xy-yx)
+  #constants eg (x*3-x*2) = 1.0
   elif expression.match(g - h, vals):
     return diff(vals.g, variable) - diff(vals.h, variable)
 
-  #power rule (x**2)
+  #power rule (x**2) == 2.0 * x
   elif expression.match(variable ** g, vals):
     return vals.g * (variable ** (vals.g - 1))
-
+  
+  #product rule (x+3)*(x+2) = (x + (5.0 + x)) TODO: Simplify brackets
   elif expression.match(g * h, vals):
     return vals.g * diff(vals.h, variable) + vals.h * diff(vals.g, variable)
-
+  
+  #quotient rule (x/y) = (1/y)
   elif expression.match(g / h, vals):
     return (diff(vals.g, variable) * vals.h - vals.g * diff(vals.h, variable)) / (vals.h ** 2)
-
+  
+  #TODO: Impliment chain rule
+  
+  #Exponent rule
   elif expression.match(Exp(variable)):
     return expression
-
+  
+  #Trig sine rule
   elif expression.match(Sin(variable)):
     return Cos(variable)
-
+  
+  #Trig cosine rule
   elif expression.match(Cos(variable)):
     return Sin(variable) * -1
-
+   
+  #Trig tangent rule
+  elif expression.match(Tan(variable)):
+    return Sec(variable) ** 2
+  
+  #Rules for sums
   elif expression.match(Sum(g, h), vals):
     if(variable(vals.g) in vals.h):
       return Sum(vals.g, diff(vals.h, variable(vals.g)))
@@ -50,8 +62,9 @@ def _diff_known_function(expression, variable):
       return Sum(vals.g, diff(vals.h, variable))
   
   #TODO: Hack in __rmul__
-  #elif expression.match(Log(variable), vals):
-  #  return 1 / variable
+  #Log rules
+  elif expression.match(Log(variable), vals):
+    return symbolic(1) / variable
 
   raise DifferentiationError("d/d%s  %s" % (variable,expression))
 
