@@ -133,7 +133,11 @@ def _distribute(op1, op2):
 def _simplify_mul_div(exp):
   a,b,c = core.wilds('a b c')
   vals = core.WildResults()
-
+  
+  if exp.match(b + (a * b), vals) or exp.match(b + (b * a), vals):
+    if isinstance(vals.a, core.Number):
+      return (vals['a'] + 1) * vals['b']
+  
   if exp.match(c * (b / c), vals) or exp.match((b / c) * c, vals):
     return vals.b
 
@@ -218,6 +222,9 @@ def _fold_additions(exp):
 
   elif exp.match(a + (a * b), vals) or exp.match(a + (b * a), vals):
     return (vals['b'] + 1) * vals['a']
+    
+  elif exp.match(b + (a * b), vals) or exp.match(b + (b * a), vals):
+    return (vals['a'] + 1) * vals['b']
 
   else:
     return exp

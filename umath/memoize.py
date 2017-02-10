@@ -44,21 +44,24 @@ class Memoize(object):
         if len(args) == 0 and len(kargs) == 0:
             key = self.noargs
             skipargs = True
-
-        # if we haven't called the function with the arguments yet, do it
-        if key not in self.results:
-            #print key
-            tmp = self.f(*args, **kargs) if not skipargs else self.f()
-
-            # generators only work once, so we have to expand them to lists in order for
-            # memoization to work
-            if type(tmp) is type(x for x in (0,)):
-                tmp = list(tmp)
-
-            self.results[key] = tmp
+        
+        if key == type(0.1):
+          pass
         else:
-            #print 'memoized!'
-            pass
+          # if we haven't called the function with the arguments yet, do it
+          if key not in self.results:
+              #print key
+              tmp = self.f(*args, **kargs) if not skipargs else self.f()
+
+              # generators only work once, so we have to expand them to lists in order for
+              # memoization to work
+              if type(tmp) is type(x for x in (0,)):
+                  tmp = list(tmp)
+
+              self.results[key] = tmp
+          else:
+              #print 'memoized!'
+              pass
 
         # return the cached results
         return self.results[key]
