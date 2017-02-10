@@ -15,13 +15,16 @@ def _diff_known_function(expression, variable):
 
   if expression[0] not in _known_functions:
     raise DifferentiationError("d/d%s  %s" % (variable,expression))
-
+    
+  #constants eg (yx+yx) = 2*y
   if expression.match(g + h, vals):
     return diff(vals.g, variable) + diff(vals.h, variable)
-
+  
+  #constants eg (xy-yx)
   elif expression.match(g - h, vals):
     return diff(vals.g, variable) - diff(vals.h, variable)
 
+  #power rule (x**2)
   elif expression.match(variable ** g, vals):
     return vals.g * (variable ** (vals.g - 1))
 
@@ -45,7 +48,8 @@ def _diff_known_function(expression, variable):
       return Sum(vals.g, diff(vals.h, variable(vals.g)))
     else:
       return Sum(vals.g, diff(vals.h, variable))
-
+  
+  #TODO: Hack in __rmul__
   #elif expression.match(Log(variable), vals):
   #  return 1 / variable
 
@@ -56,7 +60,7 @@ def diff(expression, variable):
   vals = WildResults()
   f,a,b = wilds('f a b')
 
-  expression = expression.simplify()
+  expression = symbolic(expression)
 
   if variable not in expression:
     return symbolic(0)

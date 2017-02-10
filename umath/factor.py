@@ -9,13 +9,13 @@ def is_factor(x, y):
   return True if x is a factor of y
   will return True for any 2 numbers because we use floating point
   '''
-  a, b = symath.wilds('a b')
-  val = symath.WildResults()
+  a, b = umath.wilds('a b')
+  val = umath.WildResults()
 
   if x == y:
     return True
 
-  elif isinstance(x, symath.Number) and isinstance(y, symath.Number):
+  elif isinstance(x, umath.Number) and isinstance(y, umath.Number):
     return True
 
   elif y.match(a * b, val):
@@ -39,11 +39,11 @@ def get_coefficient(y, x):
   assert is_factor(x, y)
   assert x != 1
 
-  a,b,c = symath.wilds('a b c')
-  val = symath.WildResults()
+  a,b,c = umath.wilds('a b c')
+  val = umath.WildResults()
 
   if y == x:
-    return symath.symbolic(1)
+    return umath.symbolic(1)
 
   if y.match(a * b, val):
     if is_factor(x, val.a):

@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 from . import stdops as stdops
 from . import core
-#import copy
+from . import copy
 from . import operator
 from . import factor
 
@@ -54,49 +54,7 @@ def _order(a,b):
 
   else:
     return -1 if str(a) < str(b) else (0 if str(a) == str(b) else 1)
-
-def copy(x):
-    """Shallow copy operation on arbitrary Python objects.
-
-    See the module's __doc__ string for more info.
-    """
-
-    cls = type(x)
-
-    copier = _copy_dispatch.get(cls)
-    if copier:
-        return copier(x)
-
-    try:
-        issc = issubclass(cls, type)
-    except TypeError: # cls is not a class
-        issc = False
-    if issc:
-        # treat it as a regular class:
-        return _copy_immutable(x)
-
-    copier = getattr(cls, "__copy__", None)
-    if copier:
-        return copier(x)
-
-    reductor = dispatch_table.get(cls)
-    if reductor:
-        rv = reductor(x)
-    else:
-        reductor = getattr(x, "__reduce_ex__", None)
-        if reductor:
-            rv = reductor(4)
-        else:
-            reductor = getattr(x, "__reduce__", None)
-            if reductor:
-                rv = reductor()
-            else:
-                raise Error("un(shallow)copyable object of type %s" % cls)
-
-    if isinstance(rv, str):
-        return x
-    return _reconstruct(x, None, *rv)    
-    
+ 
     
 def _assoc_reorder(exp):
   if len(exp) == 1:
@@ -114,7 +72,7 @@ def _assoc_reorder(exp):
     oldargs = tuple(args)
     args.sort(key=cmp_to_key(_order))
     if tuple(args) != oldargs:
-      kargs = copy(exp.kargs)
+      kargs = copy.copy(exp.kargs)
       exp = reduce(lambda a, b: exp.fn(a,b), args)
 
   return exp
@@ -187,6 +145,27 @@ def _simplify_mul_div(exp):
 
   elif exp.match(a / b, vals) and factor.is_factor(vals.b, vals.a):
     return factor.get_coefficient(vals.a, vals.b)
+  
+  if exp.match(((a) / (a ** b)), vals):
+    if isinstance(vals.b, core.Number):
+      return (core.symbolic(1) / vals.a ** (vals.b.value()-1))
+  
+  if exp.match(((a ** b) / (a)), vals):
+    if isinstance(vals.b, core.Number):
+      return (vals.a ** (vals.b.value()-1))
+      
+  if exp.match(((a ** c) / (a ** b)), vals):
+    if isinstance(vals.b, core.Number) and isinstance(vals.c, core.Number):
+      if c > b:
+        return ((vals.a ** (vals.c.value()-vals.b.value())) / 1)
+      elif c == b:
+        return core.symbolic(1)
+      else:
+        print("test")
+        return (core.symbolic(1) / (vals.a ** (vals.b.value()-vals.c.value())))
+
+  if exp.match(a * (b / c), vals) or exp.match((b / c) * a, vals):
+    return (vals.a * vals.b) / vals.c
 
   return exp
 

@@ -1,9 +1,9 @@
 #!/usr/bin/env python
 
 import unittest
-import symath
-import symath.util as util
-from symath.calculus import *
+import umath
+import umath.util as util
+from umath.calculus import *
 
 class TestCalculus(unittest.TestCase):
 
