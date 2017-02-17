@@ -1,4 +1,7 @@
-
+[![Build Status][travis-img]][travis-repo] ![Coverage Status](https://coveralls.io/repos/github/AaronKel/uMath/badge.svg?branch=master)
+[travis-img]:  https://travis-ci.org/AaronKel/uMath.png?branch=master
+[travis-repo]: https://travis-ci.org/AaronKel/uMath
+(https://coveralls.io/github/AaronKel/uMath?branch=master)
 
 <p align="center">
   <a href="https://github.com/AaronKel/uMath/wiki">Wiki</a> |
