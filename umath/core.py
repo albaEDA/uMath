@@ -1,15 +1,8 @@
-#!/usr/bin/env python
-# this only exists because sympy crashes IDAPython
-# for general use sympy is much more complete
-
-#import traceback
-#import types
-#import copy
 from . import operator
-#import random
-#import string
-from .memoize import Memoize
 from . import util
+import random
+
+from .memoize import Memoize
 
 def collect(exp, fn):
   rv = set()
@@ -90,15 +83,6 @@ class _Symbolic(object):
       args = list([x.walk(fn) for x in exp.args])
       oldexp = self
       exp = fn(fn(exp[0])(*args))
-
-      #while exp != oldexp:
-      #  print '%s => %s' % (oldexp, exp)
-      #  oldexp = exp
-      #  exp = exp.walk(fn)
-
-    if util.DEBUG and exp != self:
-      #print '%s => %s (%s)' % (self, exp, fn)
-      pass
      
     return exp
 
@@ -203,7 +187,7 @@ class _Symbolic(object):
   def __rmul__(self, other):
     return Fn.Mul(other, self)
 
-  def __rdiv__(self, other):
+  def __rtruediv__(self, other):
     return Fn.Div(other, self)
 
   def __radd__(self, other):
@@ -472,6 +456,16 @@ class Fn(_Symbolic):
   def __call__(self, *args):
     return Fn(self, *args)
 
+  def has(self,x):
+    return self.__contains__(x)
+    
+  def is_Symbols(self):
+    if isinstance(self, _Symbolic):
+      return True
+    else:
+      return False
+    
+  
   def substitute(self, subs):
     args = list([x.substitute(subs) for x in self.args])
     newfn = self.fn.substitute(subs)
@@ -624,7 +618,7 @@ def wilds(symstr, **kargs):
 
 def wild(name=None, **kargs):
   if name == None:
-    name = ''.join(random.choice(string.ascii_lowercase) for x in range(12))
+    name = ''.join(random.choice(['a','b','c','d','e']) for x in range(12))
   return Wild(name, **kargs)
 
 def symbolic(obj, **kargs): 
@@ -657,4 +651,7 @@ def desymbolic(s):
 
   return s.value()
 
-from . import stdops
+from . import stdops#
+
+Log,Exp,Sin,Cos,Tan,ArcCos,ArcSin,ArcTan,Sec,Sum = symbols('Log Exp Sin Cos Tan ArcCos ArcSin ArcTan Sec Sum')
+_known_functions = (Log,Exp,Sin,Cos,Tan,ArcCos,ArcSin,ArcTan,Sec,Sum)

@@ -1,4 +1,4 @@
-from .core import WildResults, wilds, symbolic, symbols, replace
+from .core import WildResults, wilds, symbolic, symbols, replace, Symbol
 from .functions import *
 from .stdops import *
 from .memoize import Memoize
@@ -28,7 +28,7 @@ def _diff_known_function(expression, variable):
   elif expression.match(variable ** g, vals):
     return vals.g * (variable ** (vals.g - 1))
   
-  #product rule (x+3)*(x+2) = (x + (5.0 + x)) TODO: Simplify brackets
+  #product rule (x+3)*(x+2) = (x + (5.0 + x)) DONE: Simplify brackets
   elif expression.match(g * h, vals):
     return vals.g * diff(vals.h, variable) + vals.h * diff(vals.g, variable)
   
@@ -36,7 +36,7 @@ def _diff_known_function(expression, variable):
   elif expression.match(g / h, vals):
     return (diff(vals.g, variable) * vals.h - vals.g * diff(vals.h, variable)) / (vals.h ** 2)
   
-  #TODO: Impliment chain rule
+  #TODO: Impliment full chain rule
   
   #Exponent rule
   elif expression.match(Exp(variable)):
@@ -61,13 +61,28 @@ def _diff_known_function(expression, variable):
     else:
       return Sum(vals.g, diff(vals.h, variable))
   
-  #TODO: Hack in __rmul__
-  #Log rules
+  #DONE: Hacked together an __rmul__ for logs
   elif expression.match(Log(variable), vals):
-    return symbolic(1) / variable
+    return 1 / variable
 
   raise DifferentiationError("d/d%s  %s" % (variable,expression))
 
+def decompose(expression, variable):
+  result = []
+  
+  if expression.has(variable):
+    return True
+  
+  #if variable in expression:
+  #  result.append(variable)
+  #  for atoms in expression.args:
+  #    tempexp = atoms
+  #    while len(tempexp.args) > 2:
+        
+      
+  #    if str(atoms.name) in str(_known_functions):
+        
+  
 def diff(expression, variable):
 
   vals = WildResults()

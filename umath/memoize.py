@@ -27,13 +27,18 @@ class Memoize(object):
         #import bnrev.symbolic as sym
 
         # get our kargs into a standard format
+        
         kkeys = list(kargs.keys())
+       # print("1: ",kkeys)
         kkeys.sort()
+        #print("2: ",kkeys)
         kkeys = tuple(kkeys)
+        #print("3: ",kkeys)
         kvals = tuple([kargs[k] for k in kkeys])
 
         # finally make our key
         key = (tuple(args), kkeys, kvals)
+        #print(key)
 
         #for i in args:
         #  if isinstance(i, sym.Number) and i.n == -0x88:

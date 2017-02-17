@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 from . import stdops as stdops
 from . import core
 from . import copy
@@ -6,7 +5,6 @@ from . import operator
 from . import factor
 
 from .core import wild
-#from functools import reduce
 
 def reduce(func, iterable, initial=None, reverse=False):
     x=initial
@@ -16,6 +14,7 @@ def reduce(func, iterable, initial=None, reverse=False):
         x=func(x,e) if x is not None else e
     return x
 
+#TODO: Change cmp into key friendly order
 def cmp_to_key(mycmp):
     'Convert a cmp= function into a key= function'
     class K(object):
@@ -37,7 +36,7 @@ def cmp_to_key(mycmp):
 
 def _order(a,b):
   '''
-  used internally to put shit in canonical order
+  used internally to put stuff in canonical order
   '''
   if isinstance(a, core.Number):
     if(isinstance(b, core.Number)):
@@ -261,7 +260,22 @@ def _simplify_bitops(exp):
     return vals.a
   else:
     return exp
+   
+def _simplify_bitops(exp):
+  a,b = core.wilds('a b')
+  vals = core.WildResults()
 
+  if exp.match(a ^ a):
+    return core.symbolic(0)
+  elif exp.match(a | a, vals):
+    return vals.a
+  elif exp.match(a & a, vals):
+    return vals.a
+  elif exp.match((a << b) >> b, vals) or exp.match((a >> b) << b, vals):
+    return vals.a
+  else:
+    return exp
+    
 def _commutative_reorder(exp):
   oexp = exp
   if len(exp) > 1 and 'commutative' in exp[0].kargs:
@@ -270,6 +284,9 @@ def _commutative_reorder(exp):
     exp = exp[0](*args)
   return exp
 
+#TODO: Simplify Trig Identities
+    
+    
 def _simplify_pass(exp):
   exp = exp.walk(\
     _commutative_reorder, \
