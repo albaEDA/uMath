@@ -1,6 +1,8 @@
 from .memoize import Memoize
-from . import stdops  #
+from . import stdops
 
+#Needed for travis
+import random
 
 def collect(exp, fn):
     rv = set()
