@@ -4,14 +4,11 @@ python:
 install:
   - pip install coveralls
 before_script:
-  - git clone https://github.com/AaronKel/micropython.git
-  - mv micropython micropython-dev
-  - cd micropython-dev/unix
-  - make axtls
-  - make
+  - git clone https://github.com/AaronKel/custom-micropython.git
+  - cd custom-micropython
   - ./micropython -m upip install micropython-unittest
-  - cp ./micropython ../../
-  - cd ../../
+  - cp ./micropython ../
+  - cd ../
 script:
   - ./micropython -m TestSuite
   - coverage run  TestSuite.py
